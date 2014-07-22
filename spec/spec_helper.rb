@@ -1,7 +1,4 @@
-require 'rubygems'
-
 require 'active_record'
-require 'action_controller'
 require 'action_view'
 
 require 'event_calendar'
