@@ -27,7 +27,7 @@ begin
     t.spec_files = FileList['spec/**/*_spec.rb']
     t.spec_opts = ['--options', 'spec/spec.opts']
   end
-  
+
 rescue LoadError
   # RSpec 2
   require 'rspec/core/rake_task'
@@ -37,12 +37,12 @@ rescue LoadError
     t.pattern = "spec/**/*_spec.rb"
     t.rspec_opts = %w(-fs --color)
   end
-  
+
 rescue LoadError
   puts "Rspec not available. Install it with: gem install rspec"
 end
 
-require 'rake/rdoctask'
+require 'rdoc/task'
 desc 'Generate documentation for the event_calendar plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'

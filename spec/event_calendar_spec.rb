@@ -7,7 +7,7 @@ describe "event calendars" do
 
   context "setup" do
     it "should find the event model" do
-      time  = DateTime.now 
+      time  = DateTime.now
       event = Event.new
       event.start_at = time
       event.end_at   = time
@@ -22,7 +22,7 @@ describe "event calendars" do
     it "should use start_at for default field" do
       Event.start_at_field.should eql('start_at')
     end
-    
+
     it "should use end_at for default field" do
       Event.end_at_field.should eql('end_at')
     end
@@ -30,12 +30,12 @@ describe "event calendars" do
 
   context "not overriding fields" do
     it "should not alias the start_at method" do
-      event = Event.new 
+      event = Event.new
       event.start_at = @time
       event.start_at.should eql( @time )
     end
     it "should not alias the end_at method" do
-      event = Event.new 
+      event = Event.new
       event.end_at = @time
       event.end_at.should eql( @time )
     end

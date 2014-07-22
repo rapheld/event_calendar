@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rapheld/event_calendar.svg)](https://travis-ci.org/rapheld/event_calendar)
+
 ==EventCalendar
 
 Easily show multiple, overlapping events across calendar days and rows.
@@ -24,11 +26,11 @@ To generate the necessary static files AND the example below:
 As a gem:
 
   gem install event-calendar
-  
+
 Add this to your Gemfile:
-  
+
   gem 'event-calendar', :require => 'event_calendar'
-  
+
 Or as a plugin:
 
   rails plugin install git://github.com/elevation/event_calendar.git
@@ -80,7 +82,7 @@ generator.
       drop_table :events
     end
   end
-  
+
 At minimum we need to have start_at and end_at fields. Altnernatively, you can configure the columns to be used by passing options to has_event_calendar.
 
 If the '--use-all-day' option is passed to the generator, it will also add a boolean all_day field. Set :start_at to be any time on the day of the event and set :all_day to true.
@@ -88,29 +90,29 @@ If the '--use-all-day' option is passed to the generator, it will also add a boo
 An event can also have a *color* field (any string which is a valid CSS color) which determines the color of the event.  Or simply override the default virtual attribute on the model. For example, if events are associated to a calendar model, then the events can get their color from the calendar.
 
 ====app/models/event.rb
-  
+
   class Event < ActiveRecord::Base
     has_event_calendar
 
     # To specify the columns to use call it like this:
-    # 
+    #
     # has_event_calendar :start_at_field  => 'custom_start_at', :end_at_field => 'custom_end_at'
-    # 
+    #
 
   end
 
 ====config/routes.rb
-  
+
 Rails 2:
-  
+
   map.calendar '/calendar/:year/:month', :controller => 'calendar', :action => 'index', :requirements => {:year => /\d{4}/, :month => /\d{1,2}/}, :year => nil, :month => nil
-  
+
 Rails 3:
-  
+
   match '/calendar(/:year(/:month))' => 'calendar#index', :as => :calendar, :constraints => {:year => /\d{4}/, :month => /\d{1,2}/}
 
 ====app/controllers/calendar_controller.rb
-  
+
   class CalendarController < ApplicationController
 
     def index
@@ -120,7 +122,7 @@ Rails 3:
       @shown_month = Date.civil(@year, @month)
 
       @event_strips = Event.event_strips_for_month(@shown_month)
-  
+
       # To restrict what events are included in the result you can pass additional find options like this:
       #
       # @event_strips = Event.event_strips_for_month(@shown_month, :include => :some_relation, :conditions => 'some_relations.some_column = true')
@@ -138,10 +140,10 @@ Some helper methods are created, but you could put this in the view. The key is 
     def month_link(month_date)
       link_to(I18n.localize(month_date, :format => "%B"), {:month => month_date.month, :year => month_date.year})
     end
-  
+
     # custom options for this calendar
     def event_calendar_options
-      { 
+      {
         :year => @year,
         :month => @month,
         :event_strips => @event_strips,
@@ -158,7 +160,7 @@ Some helper methods are created, but you could put this in the view. The key is 
       end
     end
   end
-  
+
 Notice you can pass in a block to the calendar method. In this example I'm passing a link to the event details, and displaying the event's name.
 If you are using the MooTools javascript, a Tip will be created with the content of the link's title attribute for displaying additional information.
 
@@ -167,7 +169,7 @@ If you are using the MooTools javascript, a Tip will be created with the content
 Then in calendar view, simply:
 
   <%= event_calendar %>
-  
+
 In Rails 3, use raw(event_calendar)
 
 
@@ -186,22 +188,22 @@ The default options for the calendar are:
     :previous_month_text => nil,
     :next_month_text => nil,
     :event_strips => [],
-    
+
     # it would be nice to have these in the CSS file
     # but they are needed to perform height calculations
     :width => nil,
-    :height => 500, 
+    :height => 500,
     :day_names_height => 18,
     :day_nums_height => 18,
     :event_height => 18,
     :event_margin => 1,
     :event_padding_top => 1,
-    
+
     :use_all_day => false,
     :use_javascript => true,
     :link_to_day_action => false
   }
-  
+
 You can override any of these by passing your options to the calendar method. In the above example, update the event_calendar_options helper method.
 
 ====Details
@@ -216,7 +218,7 @@ You can override any of these by passing your options to the calendar method. In
 
   Helper/View:
     :use_all_day => true
-  
+
   If using this option, you probably want to also show times for non-all-day events:
     calendar event_calendar_options do |args|
       event, day = args[:event], args[:day]
@@ -229,10 +231,10 @@ You can override any of these by passing your options to the calendar method. In
 * *use_javascript*: If set to false, it won't add custom HTML data attributes that are needed for javascript highlighting. (Note, custom attributes will be valid in HTML 5.) The actual javascript is unobtrusive and found in the event_calendar.js file.
 
 * *link_to_day_action*: Will make the calendar's day numbers links to the given Rails action. Note, you'll probably want a corresponding route, controller action, and view to go with this action. Example:
-  
+
   Helper/View calendar option:
     :link_to_day_action => "day"
-  
+
   Route (the controller is the same as your other calendar route):
     map.calendar_day "/calendar/:year/:month/:day", :controller => "calendar", :action => "day"
 
@@ -244,10 +246,10 @@ You can override any of these by passing your options to the calendar method. In
   Controller:
     @first_day_of_week = 1
     @event_strips = Event.event_strips_for_month(@shown_month, @first_day_of_week)
-  
+
   Helper/View calendar options:
     :first_day_of_week => @first_day_of_week
-    
+
 * If you need access to the events, not just the event strips, then instead of calling event_strips_for_month call these 3 methods:
 
     start_d, end_d = Event.get_start_and_end_dates(@shown_month) # optionally pass in @first_day_of_week
@@ -265,7 +267,7 @@ Mongoid is supported out of the box with no additional lines of code in the mode
 To localize month and day names, add the following to your localization file(s) in config/locales:
 
   date -> formats, day_names, abbr_day_names, month_names, abbr_month_names
-  
+
 For example, in es.yml:
 
   es:
@@ -279,7 +281,7 @@ For example, in es.yml:
       # Don't forget the nil at the beginning; there's no such thing as a 0th month
       month_names: [~, Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]
       abbr_month_names: [~, Ene, Feb, Mar, Abr, May, Jun, Jul, Ago, Sep, Oct, Nov, Dic]
-  
+
 
 ==Contributors
 
