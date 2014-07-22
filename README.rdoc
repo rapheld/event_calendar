@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rapheld/event_calendar.svg)](https://travis-ci.org/rapheld/event_calendar)
+{<img src="https://travis-ci.org/rapheld/event_calendar.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/rapheld/event_calendar]
 
 ==EventCalendar
 
