@@ -49,11 +49,13 @@ module EventCalendar
 
     # Get the events overlapping the given start and end dates
     def events_for_date_range(start_d, end_d, find_options = {})
-      self.where(find_options)
+      relation = self.where(find_options)
         .where("? <= #{self.quoted_table_name}.#{self.end_at_field}", start_d.to_time.utc)
         .where("#{self.quoted_table_name}.#{self.start_at_field} < ?", end_d.to_time.utc)
         .order("#{self.quoted_table_name}.#{self.start_at_field} ASC")
-        .to_a
+
+      relation = relation.event_calendar_scope if relation.respond_to?(:event_calendar_scope)
+      relation.to_a
     end
 
     # Create the various strips that show events.
